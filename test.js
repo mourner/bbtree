@@ -1,10 +1,10 @@
 'use strict';
 
 var test = require('tape').test,
-    BBTree = require('./bbtree.js');
+    bbtree = require('./bbtree.js');
 
 test('inserts root node', function (t) {
-    var tree = new BBTree();
+    var tree = bbtree();
     tree.insert(1);
 
     t.equal(tree.root.key, 1);
@@ -15,13 +15,13 @@ test('inserts root node', function (t) {
 
 
 test('insert some more items', function (t) {
-    var tree = new BBTree();
+    var tree = bbtree();
 
-    tree.insert(6);
-    tree.insert(5);
-    tree.insert(4);
-    tree.insert(3);
-    tree.insert(2);
+    tree.insert(6)
+        .insert(5)
+        .insert(4)
+        .insert(3)
+        .insert(2);
 
     t.equal(tree.root.key, 3);
     t.equal(tree.root.left.key, 2);
@@ -30,6 +30,18 @@ test('insert some more items', function (t) {
     t.equal(tree.root.right.key, 5);
     t.equal(tree.root.right.left.key, 4);
     t.equal(tree.root.right.right.key, 6);
+
+    t.end();
+});
+
+
+test('load an array', function (t) {
+    var tree = bbtree();
+
+    tree.load([6, 5, 4, 3, 2]);
+
+    t.equal(tree.root.key, 3);
+    t.equal(tree.root.level, 2);
 
     t.end();
 });

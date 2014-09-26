@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = BBTree;
+module.exports = bbtree;
 
 
 function Node(key, left, right, level) {
@@ -11,7 +11,10 @@ function Node(key, left, right, level) {
 }
 
 
-function BBTree(compareFn) {
+function bbtree(compareFn) {
+    // jshint validthis: true
+    if (!(this instanceof bbtree)) return new bbtree(compareFn);
+
     this._compare = compareFn || this._compare;
 
     var bottom = this._bottom = new Node();
@@ -20,7 +23,14 @@ function BBTree(compareFn) {
     bottom.level = 0;
 }
 
-BBTree.prototype = {
+bbtree.prototype = {
+
+    load: function (data) {
+        for (var i = 0; i < data.length; i++) {
+            this.insert(data[i]);
+        }
+        return this;
+    },
 
     insert: function (key) {
 
@@ -31,7 +41,7 @@ BBTree.prototype = {
 
         if (!this.root) {
             this.root = new Node(key, bottom, bottom, 1);
-            return true;
+            return this;
         }
 
         var node = this.root,
@@ -40,7 +50,7 @@ BBTree.prototype = {
 
         while (true) {
             c = compare(key, node.key);
-            if (!c) return null;
+            if (!c) return this;
 
             path.push(node);
             dir = c < 0 ? 'left' : 'right';
@@ -63,6 +73,8 @@ BBTree.prototype = {
 
             } else this.root = node;
         }
+
+        return this;
     },
 
     _skew: function (node) {
