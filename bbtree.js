@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = bbtree;
+if (typeof module !== 'undefined') module.exports = bbtree;
 
 
 function Node(key, left, right, level) {
@@ -45,33 +45,46 @@ bbtree.prototype = {
         }
 
         var node = this.root,
-            path = [],
-            dir, c;
+            path = [];
 
         while (true) {
-            c = compare(key, node.key);
+            var c = compare(key, node.key);
             if (!c) return this;
 
             path.push(node);
-            dir = c < 0 ? 'left' : 'right';
 
-            if (node[dir] === bottom) {
-                node[dir] = new Node(key, bottom, bottom, 1);
-                break;
+            if (c < 0) {
+                if (node.left === bottom) { node.left = new Node(key, bottom, bottom, 1); break; }
+                node = node.left;
+
+            } else {
+                if (node.right === bottom) { node.right = new Node(key, bottom, bottom, 1); break; }
+                node = node.right;
             }
-            node = node[dir];
         }
 
-        for (var i = path.length - 1; i >= 0; i--) {
+        for (var i = path.length - 1, current, parent, updated; i >= 0; i--) {
+            current = path[i];
+            updated = false;
 
-            node = skew(path[i]);
-            node = split(node);
+            if (current.level === current.left.level && current.level === current.right.level) {
+                current.level++;
+                updated = true;
 
-            if (i) {
-                dir = path[i - 1].left === path[i] ? 'left' : 'right';
-                path[i - 1][dir] = node;
+            } else {
+                node = skew(current);
+                node = split(node);
+                updated = node !== current;
+            }
 
-            } else this.root = node;
+            if (updated) {
+                if (i) {
+                    parent = path[i - 1];
+                    if (parent.left === current) parent.left = node;
+                    else parent.right = node;
+
+                } else this.root = node;
+            } else break;
         }
 
         return this;
