@@ -37,10 +37,11 @@ bbtree.prototype = {
         var bottom = this._bottom,
             skew = this._skew,
             split = this._split,
-            compare = this._compare;
+            compare = this._compare,
+            newNode = new Node(key, bottom, bottom, 1);
 
         if (!this.root) {
-            this.root = new Node(key, bottom, bottom, 1);
+            this.root = newNode;
             return this;
         }
 
@@ -54,11 +55,11 @@ bbtree.prototype = {
             path.push(node);
 
             if (c < 0) {
-                if (node.left === bottom) { node.left = new Node(key, bottom, bottom, 1); break; }
+                if (node.left === bottom) { node.left = newNode; break; }
                 node = node.left;
 
             } else {
-                if (node.right === bottom) { node.right = new Node(key, bottom, bottom, 1); break; }
+                if (node.right === bottom) { node.right = newNode; break; }
                 node = node.right;
             }
         }
@@ -74,17 +75,19 @@ bbtree.prototype = {
             } else {
                 node = skew(current);
                 node = split(node);
-                updated = node !== current;
             }
 
-            if (updated) {
+            if (node !== current) {
                 if (i) {
                     parent = path[i - 1];
                     if (parent.left === current) parent.left = node;
                     else parent.right = node;
 
                 } else this.root = node;
-            } else break;
+                updated = true;
+            }
+
+            if (!updated) break;
         }
 
         return this;
