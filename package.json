@@ -23,6 +23,10 @@
     "tape": "^3.0.0"
   },
   "jshintConfig": {
-    "node": true
+    "node": true,
+    "unused": true,
+    "undef": true,
+    "trailing": true,
+    "browser": true
   }
 }

@@ -36,7 +36,7 @@ BBTree.prototype = {
 
         var node = this.root,
             path = [],
-            dir, c, parent;
+            dir, c;
 
         while (true) {
             c = compare(key, node.key);
