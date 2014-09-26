@@ -37,7 +37,7 @@ BBTree.prototype = {
             dir, c;
 
         while (true) {
-            c = compare(key, t.key);
+            c = compare(key, node.key);
             if (!c) return null;
 
             path.push(node);
@@ -58,22 +58,22 @@ BBTree.prototype = {
         }
     },
 
-    _skew: function (t) {
-        if (t.left.level === t.level) {
-            var temp = t;
-            t = t.left;
-            temp.left = t.right;
-            t.right = temp;
+    _skew: function (node) {
+        if (node.left.level === node.level) {
+            var temp = node;
+            node = node.left;
+            temp.left = node.right;
+            node.right = temp;
         }
     },
 
-    _split: function (t) {
-        if (t.right.right.level === t.level) {
-            var temp = t;
-            t = t.right;
-            temp.right = t.left;
-            t.left = temp;
-            t.level++;
+    _split: function (node) {
+        if (node.right.right.level === node.level) {
+            var temp = node;
+            node = node.right;
+            temp.right = node.left;
+            node.left = temp;
+            node.level++;
         }
     }
 };

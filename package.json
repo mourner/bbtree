@@ -16,5 +16,12 @@
     "structure"
   ],
   "author": "Vladimir Agafonkin",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "jshint": "^2.5.6",
+    "tape": "^3.0.0"
+  },
+  "jshintConfig": {
+    "node": true
+  }
 }
