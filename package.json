@@ -18,6 +18,7 @@
   "author": "Vladimir Agafonkin",
   "license": "ISC",
   "devDependencies": {
+    "benchmark": "^1.0.0",
     "faucet": "0.0.1",
     "jshint": "^2.5.6",
     "tape": "^3.0.0"
