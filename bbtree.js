@@ -1,5 +1,7 @@
 'use strict';
 
+module.exports = BBTree;
+
 
 function Node(key, left, right, level) {
     this.left = left;
