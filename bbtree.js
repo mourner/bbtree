@@ -35,8 +35,6 @@ bbtree.prototype = {
     insert: function (key) {
 
         var bottom = this._bottom,
-            skew = this._skew,
-            split = this._split,
             compare = this._compare,
             newNode = new Node(key, bottom, bottom, 1);
 
@@ -64,8 +62,19 @@ bbtree.prototype = {
             }
         }
 
-        for (var i = path.length - 1, current, parent, updated; i >= 0; i--) {
-            current = path[i];
+        this._rebalance(path);
+
+        return this;
+    },
+
+    _rebalance: function (path) {
+
+        var skew = this._skew,
+            split = this._split,
+            node, current, parent, updated;
+
+        for (var i = path.length - 1; i >= 0; i--) {
+            node = current = path[i];
             updated = false;
 
             if (current.level === current.left.level && current.level === current.right.level) {
@@ -78,19 +87,17 @@ bbtree.prototype = {
             }
 
             if (node !== current) {
+                updated = true;
                 if (i) {
                     parent = path[i - 1];
                     if (parent.left === current) parent.left = node;
                     else parent.right = node;
 
                 } else this.root = node;
-                updated = true;
             }
 
             if (!updated) break;
         }
-
-        return this;
     },
 
     _skew: function (node) {
