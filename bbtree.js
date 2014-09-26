@@ -12,7 +12,7 @@ function Node(key, left, right, level) {
 
 
 function BBTree(compareFn) {
-    this._compare = compareFn;
+    this._compare = compareFn || this._compare;
 
     var bottom = this._bottom = new Node();
     bottom.left = bottom;
@@ -36,27 +36,32 @@ BBTree.prototype = {
 
         var node = this.root,
             path = [],
-            dir, c;
+            dir, c, parent;
 
         while (true) {
             c = compare(key, node.key);
             if (!c) return null;
 
             path.push(node);
-
-            dir = c ? 'left' : 'right';
+            dir = c < 0 ? 'left' : 'right';
 
             if (node[dir] === bottom) {
                 node[dir] = new Node(key, bottom, bottom, 1);
                 break;
             }
-
             node = node[dir];
         }
 
         for (var i = path.length - 1; i >= 0; i--) {
-            skew(path[i]);
-            split(path[i]);
+
+            node = skew(path[i]);
+            node = split(node);
+
+            if (i) {
+                dir = path[i - 1].left === path[i] ? 'left' : 'right';
+                path[i - 1][dir] = node;
+
+            } else this.root = node;
         }
     },
 
@@ -67,6 +72,7 @@ BBTree.prototype = {
             temp.left = node.right;
             node.right = temp;
         }
+        return node;
     },
 
     _split: function (node) {
@@ -77,6 +83,11 @@ BBTree.prototype = {
             node.left = temp;
             node.level++;
         }
+        return node;
+    },
+
+    _compare: function (a, b) {
+        return a < b ? -1 : a > b ? 1 : 0;
     }
 };
 
