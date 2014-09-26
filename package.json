@@ -1,0 +1,20 @@
+{
+  "name": "bbtree",
+  "version": "1.0.0",
+  "description": "Simple and efficient self-balancing binary search tree (Andersson tree)",
+  "main": "bbtree.js",
+  "scripts": {
+    "test": "jshint bbtree.js test.js && tape test.js"
+  },
+  "keywords": [
+    "tree",
+    "binary",
+    "bst",
+    "andersson",
+    "search",
+    "data",
+    "structure"
+  ],
+  "author": "Vladimir Agafonkin",
+  "license": "ISC"
+}
