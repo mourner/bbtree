@@ -2,22 +2,27 @@
 
 if (typeof module !== 'undefined') module.exports = bbtree;
 
-function Node(key, left, right, level) {
+function Node(key, level, left, right) {
     this.key = key;
+    this.level = level;
     this.left = left;
     this.right = right;
-    this.level = level;
 }
 
-var bottom = new Node(null, null, null, 0);
+var bottom = new Node(null, 0);
 bottom.left = bottom;
 bottom.right = bottom;
+
+function newNode(key) {
+    return new Node(key, 1, bottom, bottom);
+}
 
 function bbtree(compareFn) {
     // jshint validthis: true
     if (!(this instanceof bbtree)) return new bbtree(compareFn);
 
     this._compare = compareFn || defaultCompare;
+    this._path = [];
 }
 
 bbtree.prototype = {
@@ -32,48 +37,48 @@ bbtree.prototype = {
     insert: function (key) {
 
         var compare = this._compare,
-            newNode = new Node(key, bottom, bottom, 1);
+            node = this.root,
+            path = this._path;
 
-        if (!this.root) {
-            this.root = newNode;
+        if (!node) {
+            this.root = newNode(key);
             return this;
         }
 
-        var node = this.root,
-            path = [];
+        var k = 0;
 
         while (true) {
             var c = compare(key, node.key);
             if (!c) return this;
 
-            path.push(node);
+            path[k] = node;
+            k++;
 
             if (c < 0) {
-                if (node.left === bottom) { node.left = newNode; break; }
+                if (node.left === bottom) { node.left = newNode(key); break; }
                 node = node.left;
 
             } else {
-                if (node.right === bottom) { node.right = newNode; break; }
+                if (node.right === bottom) { node.right = newNode(key); break; }
                 node = node.right;
             }
         }
 
-        this._rebalance(path);
+        this._rebalance(path, k);
 
         return this;
     },
 
-    _rebalance: function (path) {
+    _rebalance: function (path, k) {
 
-        var rotated, node, parent, updated;
+        var rotated, node, parent, updated, m = 0;
 
-        for (var i = path.length - 1; i >= 0; i--) {
+        for (var i = k - 1; i >= 0; i--) {
             rotated = node = path[i];
-            updated = false;
 
             if (node.level === node.left.level && node.level === node.right.level) {
-                node.level++;
                 updated = true;
+                node.level++;
 
             } else {
                 rotated = skew(node);
@@ -89,8 +94,8 @@ bbtree.prototype = {
 
                 } else this.root = rotated;
             }
-
-            if (!updated) break;
+            if (!updated) m++;
+            if (m === 2) break;
         }
     }
 };
