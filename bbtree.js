@@ -35,7 +35,7 @@ BBTree.prototype = {
             compare = this._compare;
 
         while (node !== bottom) {
-            var c = compare(node.key, key);
+            var c = compare(key, node.key);
             if (c === 0) return node;
             node = c < 0 ? node.left : node.right;
         }

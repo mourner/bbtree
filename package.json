@@ -19,9 +19,7 @@
   "license": "ISC",
   "devDependencies": {
     "benchmark": "^1.0.0",
-    "binary-search-tree": "^0.2.4",
     "bintrees": "^1.0.0",
-    "dsjslib": "^0.6.10",
     "faucet": "0.0.1",
     "functional-red-black-tree": "^1.0.0",
     "jshint": "^2.5.6",

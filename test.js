@@ -34,14 +34,17 @@ test('insert some more items', function (t) {
     t.end();
 });
 
+test('find an item', function (t) {
+    var tree = bbtree(),
+        obj = {foo: 5};
 
-test('load an array', function (t) {
-    var tree = bbtree();
+    tree.insert(6)
+        .insert(5)
+        .insert(4, obj)
+        .insert(3)
+        .insert(2);
 
-    tree.load([6, 5, 4, 3, 2]);
-
-    t.equal(tree.root.key, 3);
-    t.equal(tree.root.level, 2);
+    t.equal(tree.find(4).value, obj);
 
     t.end();
 });
