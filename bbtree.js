@@ -2,25 +2,22 @@
 
 if (typeof module !== 'undefined') module.exports = bbtree;
 
-
 function Node(key, left, right, level) {
+    this.key = key;
     this.left = left;
     this.right = right;
     this.level = level;
-    this.key = key;
 }
 
+var bottom = new Node(null, null, null, 0);
+bottom.left = bottom;
+bottom.right = bottom;
 
 function bbtree(compareFn) {
     // jshint validthis: true
     if (!(this instanceof bbtree)) return new bbtree(compareFn);
 
-    this._compare = compareFn || this._compare;
-
-    var bottom = this._bottom = new Node();
-    bottom.left = bottom;
-    bottom.right = bottom;
-    bottom.level = 0;
+    this._compare = compareFn || defaultCompare;
 }
 
 bbtree.prototype = {
@@ -34,8 +31,7 @@ bbtree.prototype = {
 
     insert: function (key) {
 
-        var bottom = this._bottom,
-            compare = this._compare,
+        var compare = this._compare,
             newNode = new Node(key, bottom, bottom, 1);
 
         if (!this.root) {
@@ -69,60 +65,59 @@ bbtree.prototype = {
 
     _rebalance: function (path) {
 
-        var skew = this._skew,
-            split = this._split,
-            node, current, parent, updated;
+        var rotated, node, parent, updated;
 
         for (var i = path.length - 1; i >= 0; i--) {
-            node = current = path[i];
+            rotated = node = path[i];
             updated = false;
 
-            if (current.level === current.left.level && current.level === current.right.level) {
-                current.level++;
+            if (node.level === node.left.level && node.level === node.right.level) {
+                node.level++;
                 updated = true;
 
             } else {
-                node = skew(current);
-                node = split(node);
+                rotated = skew(node);
+                rotated = split(rotated);
             }
 
-            if (node !== current) {
+            if (rotated !== node) {
                 updated = true;
                 if (i) {
                     parent = path[i - 1];
-                    if (parent.left === current) parent.left = node;
-                    else parent.right = node;
+                    if (parent.left === node) parent.left = rotated;
+                    else parent.right = rotated;
 
-                } else this.root = node;
+                } else this.root = rotated;
             }
 
             if (!updated) break;
         }
-    },
-
-    _skew: function (node) {
-        if (node.left.level === node.level) {
-            var temp = node;
-            node = node.left;
-            temp.left = node.right;
-            node.right = temp;
-        }
-        return node;
-    },
-
-    _split: function (node) {
-        if (node.right.right.level === node.level) {
-            var temp = node;
-            node = node.right;
-            temp.right = node.left;
-            node.left = temp;
-            node.level++;
-        }
-        return node;
-    },
-
-    _compare: function (a, b) {
-        return a < b ? -1 : a > b ? 1 : 0;
     }
 };
+
+function defaultCompare(a, b) {
+    return a < b ? -1 : a > b ? 1 : 0;
+}
+
+function skew(node) {
+    if (node.left.level === node.level) {
+        var temp = node;
+        node = node.left;
+        temp.left = node.right;
+        node.right = temp;
+    }
+    return node;
+}
+
+function split(node) {
+    if (node.right.right.level === node.level) {
+        var temp = node;
+        node = node.right;
+        temp.right = node.left;
+        node.left = temp;
+        node.level++;
+    }
+    return node;
+}
+
 
