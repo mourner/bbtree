@@ -18,14 +18,15 @@ function newNode(key) {
 }
 
 function bbtree(compareFn) {
-    // jshint validthis: true
-    if (!(this instanceof bbtree)) return new bbtree(compareFn);
+    return new BBTree(compareFn);
+}
 
+function BBTree(compareFn) {
     this._compare = compareFn || defaultCompare;
     this._path = [];
 }
 
-bbtree.prototype = {
+BBTree.prototype = {
 
     load: function (data) {
         for (var i = 0; i < data.length; i++) {
@@ -124,5 +125,3 @@ function split(node) {
     }
     return node;
 }
-
-
