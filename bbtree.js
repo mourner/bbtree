@@ -2,19 +2,21 @@
 
 if (typeof module !== 'undefined') module.exports = bbtree;
 
-function Node(key, level, left, right) {
+function Node(key, value, level, left, right) {
     this.key = key;
+    this.value = value;
+
     this.level = level;
     this.left = left;
     this.right = right;
 }
 
-var bottom = new Node(null, 0);
+var bottom = new Node(null, null, 0);
 bottom.left = bottom;
 bottom.right = bottom;
 
-function newNode(key) {
-    return new Node(key, 1, bottom, bottom);
+function newNode(key, value) {
+    return new Node(key, value, 1, bottom, bottom);
 }
 
 function bbtree(compareFn) {
@@ -28,21 +30,26 @@ function BBTree(compareFn) {
 
 BBTree.prototype = {
 
-    load: function (data) {
-        for (var i = 0; i < data.length; i++) {
-            this.insert(data[i]);
+    find: function (key) {
+        var node = this.root,
+            compare = this._compare;
+
+        while (node !== bottom) {
+            var c = compare(node.key, key);
+            if (c === 0) return node;
+            node = c < 0 ? node.left : node.right;
         }
-        return this;
+        return null;
     },
 
-    insert: function (key) {
+    insert: function (key, value) {
 
         var compare = this._compare,
             node = this.root,
             path = this._path;
 
         if (!node) {
-            this.root = newNode(key);
+            this.root = newNode(key, value);
             return this;
         }
 
@@ -56,11 +63,11 @@ BBTree.prototype = {
             k++;
 
             if (c < 0) {
-                if (node.left === bottom) { node.left = newNode(key); break; }
+                if (node.left === bottom) { node.left = newNode(key, value); break; }
                 node = node.left;
 
             } else {
-                if (node.right === bottom) { node.right = newNode(key); break; }
+                if (node.right === bottom) { node.right = newNode(key, value); break; }
                 node = node.right;
             }
         }
