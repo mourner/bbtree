@@ -25,8 +25,8 @@ test('insert some more items', function (t) {
 
     t.equal(tree.root.key, 3);
     t.equal(tree.root.left.key, 2);
-    t.equal(tree.root.left.left.key, undefined);
-    t.equal(tree.root.left.right.key, undefined);
+    t.equal(tree.root.left.left.key, null);
+    t.equal(tree.root.left.right.key, null);
     t.equal(tree.root.right.key, 5);
     t.equal(tree.root.right.left.key, 4);
     t.equal(tree.root.right.right.key, 6);
