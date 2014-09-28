@@ -26,23 +26,18 @@ BSArray.prototype = {
             i = 0,
             j = items.length - 1;
 
-        while (j > i) {
-            var pivot = Math.floor((i + j) / 2);
-            var c = compare(key, items[pivot].key);
-            if (c === 0) return false;
-            if (c < 0) j = pivot - 1;
-            else i = pivot + 1;
+        while (i <= j) {
+            var mid = Math.floor((i + j) / 2);
+            var c = compare(key, items[mid].key);
+            if (c === 0) {
+                items[mid].value = value;
+                return;
+            }
+            if (c < 0) j = mid - 1;
+            else i = mid + 1;
         }
 
-        if (items.length) {
-            var c = compare(key, items[i].key);
-            if (c === 0) return false;
-            if (c > 0) i++;
-        } else i = 0;
-
-        items.splice(i, 0, {key: key, value: value});
-
-        return true;
+        items.splice(i < 0 ? 0 : i, 0, {key: key, value: value});
     },
 
     find: function (key) {
@@ -52,15 +47,14 @@ BSArray.prototype = {
             i = 0,
             j = items.length - 1;
 
-        while (true) {
-            var pivot = Math.floor((i + j) / 2);
-            if (j < i) return null;
-            var c = compare(key, items[pivot].key);
-            if (c === 0) return pivot;
-            if (j == i) return null;
-            if (c < 0) j = pivot - 1;
-            else i = pivot + 1;
+        while (i <= j) {
+            var mid = Math.floor((i + j) / 2);
+            var c = compare(key, items[mid].key);
+            if (c === 0) return mid;
+            if (c < 0) j = mid - 1;
+            else i = mid + 1;
         }
+        return null;
     },
 
     remove: function (key) {
