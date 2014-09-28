@@ -8,7 +8,7 @@ var Benchmark = require('benchmark'),
     // not benchmarking dsjslib & binarySearchTree, they're slow and so not interesting
 
 var data = [],
-    N = 1000;
+    N = 10000;
 
 for (var i = 0; i < N; i++) {
     data[i] = Math.floor(Math.random() * N);
@@ -42,7 +42,7 @@ new Benchmark.Suite()
 .add('functional-red-black-tree', function () {
     var tree = functionalRBTree(compare);
     for (var i = 0; i < N; i++) {
-        tree.insert(data[i]);
+        tree = tree.insert(data[i]);
     }
 })
 .add('jsbintrees RBTree', function () {
@@ -55,7 +55,7 @@ new Benchmark.Suite()
 .on('cycle', function(event) { console.log(String(event.target)); }).run();
 
 
-console.log('\nsearch random item in ' + N + '-sized tree');
+console.log('\nsearch each item in ' + N + '-sized tree');
 
 var btree = bbtree(compare);
 for (var i = 0; i < N; i++) {
@@ -69,7 +69,7 @@ for (var i = 0; i < N; i++) {
 
 var rbtree = functionalRBTree(compare);
 for (var i = 0; i < N; i++) {
-    rbtree.insert(data[i]);
+    rbtree = rbtree.insert(data[i]);
 }
 
 var bintree = new bintrees.RBTree(compare);
@@ -88,24 +88,36 @@ function randomIndex(N) {
 
 new Benchmark.Suite()
 .add('llrb', function () {
-    lltree.find(data[randomIndex(N)]);
+    for (var i = 0; i < N; i++) {
+        lltree.find(data[i]);
+    }
 })
 .add('bbtree', function () {
-    btree.find(data[randomIndex(N)]);
+    for (var i = 0; i < N; i++) {
+        btree.find(data[i]);
+    }
 })
 .add('bsarray', function () {
-    arr.find(data[randomIndex(N)]);
+    for (var i = 0; i < N; i++) {
+        arr.find(data[i]);
+    }
 })
 .add('functional-red-black-tree', function () {
-    rbtree.get(data[randomIndex(N)]);
+    for (var i = 0; i < N; i++) {
+        rbtree.get(data[i]);
+    }
 })
 .add('jsbintrees RBTree', function () {
-    bintree.find(data[randomIndex(N)]);
+    for (var i = 0; i < N; i++) {
+        bintree.find(data[i]);
+    }
 })
 .add('naive loop', function () {
-    var key = data[randomIndex(N)];
     for (var i = 0; i < N; i++) {
-        if (compare(data[i], key) === 0) break;
+        var key = data[i];
+        for (var j = 0; j < N; j++) {
+            if (compare(data[j], key) === 0) break;
+        }
     }
 })
 .on('error', function(event) { console.log(event.target.error); })
