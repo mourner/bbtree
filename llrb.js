@@ -42,8 +42,33 @@ LLRBTree.prototype = {
     insert: function (key, value) {
         this.root = insert(this.root, key, value, this.compare);
         this.root.red = false;
+    },
+
+    removeMin: function () {
+        var root = this.root;
+
+        if (root === bottom) return;
+        if (!root.left.red && !root.right.red) root.red = true;
+
+        root = this.root = removeMin(root);
+        root.red = false;
+    },
+
+    remove: function (key) {
+        if (!this.find(key)) return;
+
+        var root = this.root;
+
+        if (!root.left.red && !root.right.red) root.red = true;
+
+        root = this.root = remove(root, key, this.compare);
+        root.red = false;
     }
 };
+
+function defaultCompare(a, b) {
+    return a < b ? -1 : a > b ? 1 : 0;
+}
 
 function insert(h, key, value, compare) {
     if (h === bottom) return new Node(key, value, true, bottom, bottom);
@@ -61,8 +86,39 @@ function insert(h, key, value, compare) {
     return h;
 }
 
-function defaultCompare(a, b) {
-    return a < b ? -1 : a > b ? 1 : 0;
+function removeMin(h) {
+    if (h.left === bottom) return bottom;
+    if (!h.left.red && !h.left.left.red) h = moveRedLeft(h);
+    h.left = removeMin(h.left);
+    return balance(h);
+}
+
+function remove(h, key, compare) {
+    if (compare(key, h.key) < 0)  {
+        if (!h.left.red && !h.left.left.red) h = moveRedLeft(h);
+        h.left = remove(h.left, key, compare);
+
+    } else {
+        if (h.left.red) h = rotateRight(h);
+
+        if (compare(key, h.key) === 0 && (h.right === bottom)) return bottom;
+
+        if (!h.right.red && !h.right.left.red) h = moveRedRight(h);
+
+        if (compare(key, h.key) === 0) {
+            var x = min(h.right);
+            h.key = x.key;
+            h.val = x.val;
+            h.right = removeMin(h.right);
+
+        } else h.right = remove(h.right, key, compare);
+    }
+    return balance(h);
+}
+
+function min(x) {
+    if (x.left === bottom) return x;
+    else return min(x.left);
 }
 
 function rotateRight(h) {
@@ -84,7 +140,29 @@ function rotateLeft(h) {
 }
 
 function flipColors(h) {
-    h.red = true;
-    h.left.red = false;
-    h.right.red = false;
+    h.red = !h.red;
+    h.left.red = !h.left.red;
+    h.right.red = !h.right.red;
+}
+
+function moveRedLeft(h) {
+    flipColors(h);
+    if (h.right.left.red) {
+        h.right = rotateRight(h.right);
+        h = rotateLeft(h);
+    }
+    return h;
+}
+
+function moveRedRight(h) {
+    flipColors(h);
+    if (h.left.left.red) h = rotateRight(h);
+    return h;
+}
+
+function balance(h) {
+    if (h.right.red) h = rotateLeft(h);
+    if (h.left.red && h.left.left.red) h = rotateRight(h);
+    if (h.left.red && h.right.red) flipColors(h);
+    return h;
 }

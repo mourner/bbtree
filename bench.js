@@ -82,10 +82,6 @@ for (var i = 0; i < N; i++) {
     arr.insert(data[i]);
 }
 
-function randomIndex(N) {
-    return Math.floor(Math.random() * N);
-}
-
 new Benchmark.Suite()
 .add('llrb', function () {
     for (var i = 0; i < N; i++) {
@@ -118,6 +114,33 @@ new Benchmark.Suite()
         for (var j = 0; j < N; j++) {
             if (compare(data[j], key) === 0) break;
         }
+    }
+})
+.on('error', function(event) { console.log(event.target.error); })
+.on('cycle', function(event) { console.log(String(event.target)); }).run();
+
+
+console.log('remove ' + N + ' items one by one');
+
+new Benchmark.Suite()
+.add('llrb', function () {
+    for (var i = 0; i < N; i++) {
+        lltree.remove(data[i]);
+    }
+})
+.add('bsarray', function () {
+    for (var i = 0; i < N; i++) {
+        arr.removeAt(arr.find(data[i]));
+    }
+})
+.add('functional-red-black-tree', function () {
+    for (var i = 0; i < N; i++) {
+        rbtree.remove(data[i]);
+    }
+})
+.add('jsbintrees RBTree', function () {
+    for (var i = 0; i < N; i++) {
+        bintree.remove(data[i]);
     }
 })
 .on('error', function(event) { console.log(event.target.error); })
