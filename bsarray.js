@@ -24,15 +24,12 @@ BSArray.prototype = {
             i = 0,
             j = items.length - 1;
 
-        while (true) {
-            if (j > i) {
-                var pivot = Math.floor((i + j) / 2);
-                var c = compare(key, items[pivot].key);
-                if (c === 0) return false;
-                if (c < 0) j = pivot - 1;
-                else i = pivot + 1;
-
-            } else break;
+        while (j > i) {
+            var pivot = Math.floor((i + j) / 2);
+            var c = compare(key, items[pivot].key);
+            if (c === 0) return false;
+            if (c < 0) j = pivot - 1;
+            else i = pivot + 1;
         }
 
         if (items.length) {
