@@ -1,13 +1,14 @@
 
 var Benchmark = require('benchmark'),
     bbtree = require('./bbtree'),
+    bsarray = require('./bsarray'),
+    llrb = require('./llrb'),
     functionalRBTree = require('functional-red-black-tree'),
-    bintrees = require('bintrees'),
-    bsarray = require('./bsarray');
+    bintrees = require('bintrees');
     // not benchmarking dsjslib & binarySearchTree, they're slow and so not interesting
 
 var data = [],
-    N = 5000;
+    N = 1000;
 
 for (var i = 0; i < N; i++) {
     data[i] = Math.floor(Math.random() * N);
@@ -20,6 +21,12 @@ function compare(a, b) {
 console.log('insert ' + N + ' items:');
 
 new Benchmark.Suite()
+.add('llrb', function () {
+    var tree = llrb(compare);
+    for (var i = 0; i < N; i++) {
+        tree.insert(data[i]);
+    }
+})
 .add('bbtree', function () {
     var tree = bbtree(compare);
     for (var i = 0; i < N; i++) {
@@ -55,6 +62,11 @@ for (var i = 0; i < N; i++) {
     btree.insert(data[i]);
 }
 
+var lltree = llrb(compare);
+for (var i = 0; i < N; i++) {
+    lltree.insert(data[i]);
+}
+
 var rbtree = functionalRBTree(compare);
 for (var i = 0; i < N; i++) {
     rbtree.insert(data[i]);
@@ -75,6 +87,9 @@ function randomIndex(N) {
 }
 
 new Benchmark.Suite()
+.add('llrb', function () {
+    lltree.find(data[randomIndex(N)]);
+})
 .add('bbtree', function () {
     btree.find(data[randomIndex(N)]);
 })

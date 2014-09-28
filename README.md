@@ -1,12 +1,15 @@
-## bbtree
+## Balanced Binary Search Tree experiments
 
-A very simple JavaScript implementation a self-balancing binary search tree data structure,
-based on Arne Andersson's [Balanced Search Trees Made Simple paper](http://user.it.uu.se/~arnea/ps/simp.pdf) and
-[Julienne Walker's tutorial](http://www.eternallyconfuzzled.com/tuts/datastructures/jsw_tut_andersson.aspx).
+This repo contains several simple balanced binary search tree JavaScript implementations to experiment, benchmark and play with.
 
-The goal of this little experiment is simplicity and tiny size.
-If you need the best performance, use [functional-red-black-tree](https://github.com/mikolalysenko/functional-red-black-tree),
-which is amazing and works about 2-3x faster.
+- `bbtree.js`: Andersson tree (based on Arne Andersson's [Balanced Search Trees Made Simple paper](http://user.it.uu.se/~arnea/ps/simp.pdf) and
+[Julienne Walker's tutorial](http://www.eternallyconfuzzled.com/tuts/datastructures/jsw_tut_andersson.aspx))
+- `bsarray.js`: pseudo-BBST internally stored as a simple JS array
+- `llrb.js`: Sedgewick's [Left-Leaning Red-Black Tree](http://algs4.cs.princeton.edu/33balanced/)
+
+Benchmarks contain comparisons with [functional-red-black-tree](https://github.com/mikolalysenko/functional-red-black-tree) (incredibly, insanely fast, still not sure why) and [js_bintrees](https://github.com/vadimg/js_bintrees).
+
+Example usage of trees:
 
 ```js
 // create a tree using a custom compare function
