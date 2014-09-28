@@ -120,7 +120,7 @@ new Benchmark.Suite()
 .on('cycle', function(event) { console.log(String(event.target)); }).run();
 
 
-console.log('remove ' + N + ' items one by one');
+console.log('\nremove ' + N + ' items one by one');
 
 new Benchmark.Suite()
 .add('llrb', function () {
@@ -130,7 +130,8 @@ new Benchmark.Suite()
 })
 .add('bsarray', function () {
     for (var i = 0; i < N; i++) {
-        arr.removeAt(arr.find(data[i]));
+        var index = arr.find(data[i]);
+        if (index !== null) arr.removeAt(index);
     }
 })
 .add('functional-red-black-tree', function () {
