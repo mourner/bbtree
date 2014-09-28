@@ -8,7 +8,7 @@ var Benchmark = require('benchmark'),
     // not benchmarking dsjslib & binarySearchTree, they're slow and so not interesting
 
 var data = [],
-    N = 10000;
+    N = 2000;
 
 for (var i = 0; i < N; i++) {
     data[i] = Math.floor(Math.random() * N);

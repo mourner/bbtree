@@ -6,8 +6,23 @@ function llrb(compare) {
     return new LLRBTree(compare);
 }
 
+
+function Node(key, value, red, left, right) {
+    this.key = key;
+    this.value = value;
+    this.red = red;
+    this.left = left;
+    this.right = right;
+}
+
+var bottom = new Node(null, null, false);
+bottom.left = bottom;
+bottom.right = bottom;
+
+
 function LLRBTree(compare) {
     this.compare = compare || defaultCompare;
+    this.root = bottom;
 }
 
 LLRBTree.prototype = {
@@ -16,7 +31,7 @@ LLRBTree.prototype = {
         var n = this.root,
             cmp = this.compare;
 
-        while (n) {
+        while (n !== bottom) {
             var c = cmp(key, n.key);
             if (c === 0) return n;
             n = c < 0 ? n.left : n.right;
@@ -30,16 +45,8 @@ LLRBTree.prototype = {
     }
 };
 
-function Node(key, value, red) {
-    this.key = key;
-    this.value = value;
-    this.red = red;
-    this.left = null;
-    this.right = null;
-}
-
 function insert(h, key, value, compare) {
-    if (!h) return new Node(key, value, true);
+    if (h === bottom) return new Node(key, value, true, bottom, bottom);
 
     var c = compare(key, h.key);
 
@@ -47,19 +54,15 @@ function insert(h, key, value, compare) {
     else if (c > 0) h.right = insert(h.right, key, value, compare);
     else h.value = value;
 
-    if (isRed(h.right) && !isRed(h.left)) h = rotateLeft(h);
-    if (isRed(h.left) && isRed(h.left.left)) h = rotateRight(h);
-    if (isRed(h.left) && isRed(h.right)) flipColors(h);
+    if (h.right.red && !h.left.red) h = rotateLeft(h);
+    if (h.left.red && h.left.left.red) h = rotateRight(h);
+    if (h.left.red && h.right.red) flipColors(h);
 
     return h;
 }
 
 function defaultCompare(a, b) {
     return a < b ? -1 : a > b ? 1 : 0;
-}
-
-function isRed(h) {
-    return h && h.red;
 }
 
 function rotateRight(h) {
