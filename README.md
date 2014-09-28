@@ -7,7 +7,9 @@ This repo contains several simple balanced binary search tree JavaScript impleme
 - `bsarray.js`: pseudo-BBST internally stored as a simple JS array
 - `llrb.js`: Sedgewick's [Left-Leaning Red-Black Tree](http://algs4.cs.princeton.edu/33balanced/)
 
-Benchmarks contain comparisons with [functional-red-black-tree](https://github.com/mikolalysenko/functional-red-black-tree) (incredibly, insanely fast, still not sure why) and [js_bintrees](https://github.com/vadimg/js_bintrees).
+Benchmarks contain comparisons with [functional-red-black-tree](https://github.com/mikolalysenko/functional-red-black-tree) and [js_bintrees](https://github.com/vadimg/js_bintrees).
+
+The goal is to create the fastest and at the same time the simplest JS balanced binary search tree library.
 
 Example usage of trees:
 

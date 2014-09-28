@@ -1,3 +1,4 @@
+'use strict';
 
 module.exports = llrb;
 
@@ -19,12 +20,12 @@ function Node(key, value, red) {
 
 LLRBTree.prototype = {
     find: function (key) {
-        var x = this.root,
-            compare = this.compare;
-        while (x) {
-            var c = compare(key, x.key);
-            if (c === 0) return x;
-            x = c < 0 ? x.left : x.right;
+        var n = this.root,
+            cmp = this.compare;
+        while (n) {
+            var c = cmp(key, n.key);
+            if (c === 0) return n;
+            n = c < 0 ? n.left : n.right;
         }
         return null;
     },
