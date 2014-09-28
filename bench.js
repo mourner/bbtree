@@ -120,26 +120,42 @@ new Benchmark.Suite()
 .on('cycle', function(event) { console.log(String(event.target)); }).run();
 
 
-console.log('\nremove ' + N + ' items one by one');
+console.log('\ninsert ' + N + ' items and then remove one by one');
 
 new Benchmark.Suite()
 .add('llrb', function () {
+    var lltree = llrb(compare);
     for (var i = 0; i < N; i++) {
+        lltree.insert(data[i]);
+    }
+    for (i = 0; i < N; i++) {
         lltree.remove(data[i]);
     }
 })
 .add('bsarray', function () {
+    var arr = bsarray(compare);
+    for (var i = 0; i < N; i++) {
+        arr.insert(data[i]);
+    }
     for (var i = 0; i < N; i++) {
         var index = arr.find(data[i]);
         if (index !== null) arr.removeAt(index);
     }
 })
 .add('functional-red-black-tree', function () {
+    var rbtree = functionalRBTree(compare);
     for (var i = 0; i < N; i++) {
+        rbtree = rbtree.insert(data[i]);
+    }
+    for (i = 0; i < N; i++) {
         rbtree.remove(data[i]);
     }
 })
 .add('jsbintrees RBTree', function () {
+    var bintree = new bintrees.RBTree(compare);
+    for (var i = 0; i < N; i++) {
+        bintree.insert(data[i]);
+    }
     for (var i = 0; i < N; i++) {
         bintree.remove(data[i]);
     }
