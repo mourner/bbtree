@@ -10,18 +10,12 @@ function LLRBTree(compare) {
     this.compare = compare || defaultCompare;
 }
 
-function Node(key, value, red) {
-    this.key = key;
-    this.value = value;
-    this.red = red;
-    this.left = null;
-    this.right = null;
-}
-
 LLRBTree.prototype = {
+
     find: function (key) {
         var n = this.root,
             cmp = this.compare;
+
         while (n) {
             var c = cmp(key, n.key);
             if (c === 0) return n;
@@ -34,11 +28,14 @@ LLRBTree.prototype = {
         this.root = insert(this.root, key, value, this.compare);
         this.root.red = false;
     }
-}
+};
 
-function defaultCompare(a, b) {
-    return a < b ? -1 :
-           a > b ?  1 : 0;
+function Node(key, value, red) {
+    this.key = key;
+    this.value = value;
+    this.red = red;
+    this.left = null;
+    this.right = null;
 }
 
 function insert(h, key, value, compare) {
@@ -55,6 +52,10 @@ function insert(h, key, value, compare) {
     if (isRed(h.left) && isRed(h.right)) flipColors(h);
 
     return h;
+}
+
+function defaultCompare(a, b) {
+    return a < b ? -1 : a > b ? 1 : 0;
 }
 
 function isRed(h) {
