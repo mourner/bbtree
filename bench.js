@@ -138,8 +138,7 @@ new Benchmark.Suite()
         arr.insert(data[i]);
     }
     for (var i = 0; i < N; i++) {
-        var index = arr.find(data[i]);
-        if (index !== null) arr.removeAt(index);
+        arr.remove(data[i]);
     }
 })
 .add('functional-red-black-tree', function () {

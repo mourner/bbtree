@@ -1,18 +1,20 @@
+'use strict';
 
-// really simple pseudo-bst array structure
+module.exports = bsarray;
 
-module.exports = function bsarray(compare) {
+// really simple pseudo-bst array wrapper
+
+function bsarray(compare) {
     return new BSArray(compare);
 };
 
 function BSArray(compare) {
-    this._compare = compare || defaultCompare;
+    this.compare = compare || defaultCompare;
     this.items = [];
 }
 
 function defaultCompare(a, b) {
-    return a < b ? -1 :
-           a > b ?  1 : 0;
+    return a < b ? -1 : a > b ? 1 : 0;
 }
 
 BSArray.prototype = {
@@ -20,7 +22,7 @@ BSArray.prototype = {
     insert: function (key, value) {
 
         var items = this.items,
-            compare = this._compare,
+            compare = this.compare,
             i = 0,
             j = items.length - 1;
 
@@ -46,7 +48,7 @@ BSArray.prototype = {
     find: function (key) {
 
         var items = this.items,
-            compare = this._compare,
+            compare = this.compare,
             i = 0,
             j = items.length - 1;
 
@@ -59,6 +61,11 @@ BSArray.prototype = {
             if (c < 0) j = pivot - 1;
             else i = pivot + 1;
         }
+    },
+
+    remove: function (key) {
+        var index = this.find(key);
+        if (index !== null) this.removeAt(index);
     },
 
     removeAt: function (index) {
