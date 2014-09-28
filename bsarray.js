@@ -52,9 +52,10 @@ BSArray.prototype = {
 
         while (true) {
             var pivot = Math.floor((i + j) / 2);
+            if (j < i) return null;
             var c = compare(key, items[pivot].key);
             if (c === 0) return pivot;
-            if (j <= i) return null;
+            if (j == i) return null;
             if (c < 0) j = pivot - 1;
             else i = pivot + 1;
         }
