@@ -37,7 +37,7 @@ BSArray.prototype = {
             else i = mid + 1;
         }
 
-        items.splice(i < 0 ? 0 : i, 0, {key: key, value: value});
+        items.splice(i, 0, {key: key, value: value});
     },
 
     find: function (key) {
@@ -59,10 +59,6 @@ BSArray.prototype = {
 
     remove: function (key) {
         var index = this.find(key);
-        if (index !== null) this.removeAt(index);
-    },
-
-    removeAt: function (index) {
-        this.items.splice(index, 1);
+        if (index !== null) this.items.splice(index, 1);
     }
 };
