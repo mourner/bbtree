@@ -6,7 +6,7 @@ module.exports = bsarray;
 
 function bsarray(compare) {
     return new BSArray(compare);
-};
+}
 
 function BSArray(compare) {
     this.compare = compare || defaultCompare;
@@ -29,10 +29,9 @@ BSArray.prototype = {
         while (i <= j) {
             var mid = Math.floor((i + j) / 2);
             var c = compare(key, items[mid].key);
-            if (c === 0) {
-                items[mid].value = value;
-                return;
-            }
+
+            if (c === 0) { items[mid].value = value; return; }
+
             if (c < 0) j = mid - 1;
             else i = mid + 1;
         }
@@ -50,10 +49,13 @@ BSArray.prototype = {
         while (i <= j) {
             var mid = Math.floor((i + j) / 2);
             var c = compare(key, items[mid].key);
+
             if (c === 0) return mid;
+
             if (c < 0) j = mid - 1;
             else i = mid + 1;
         }
+
         return null;
     },
 
