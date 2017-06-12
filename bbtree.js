@@ -30,16 +30,26 @@ function BBTree(compareFn) {
 
 BBTree.prototype = {
 
-    find: function (key) {
+    find: function (key, closest) {
         var node = this.root,
-            compare = this._compare;
+            compare = this._compare,
+            last, lc = Infinity;
 
         while (node !== bottom) {
             var c = compare(key, node.key);
             if (c === 0) return node;
+            if (closest && Math.abs(lc) > Math.abs(c)) {
+                last = node;
+                lc = c;
+            }
             node = c < 0 ? node.left : node.right;
         }
-        return null;
+        return closest ? last : null;
+    },
+
+    closest: function (key) {
+
+        return this.find(key, true);
     },
 
     insert: function (key, value) {

@@ -48,3 +48,27 @@ test('find an item', function (t) {
 
     t.end();
 });
+
+test('find closest item', function (t) {
+    var compare = function (a, b) {
+        return a - b;
+    }
+    var tree = bbtree(compare),
+        obj = {foo: 5},
+        obj2 = {bar: 7};
+
+    tree.insert(7, obj2)
+        .insert(4, obj)
+        .insert(3)
+        .insert(2);
+
+    // closest match
+    t.equal(tree.closest(5).value, obj);
+    t.equal(tree.closest(6).value, obj2);
+
+    // still works for exact match
+    t.equal(tree.closest(7).value, obj2);
+    t.equal(tree.closest(2).key, 2);
+
+    t.end();
+});
