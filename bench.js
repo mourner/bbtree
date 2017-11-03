@@ -4,11 +4,15 @@ var Benchmark = require('benchmark'),
     bsarray = require('./bsarray'),
     llrb = require('./llrb'),
     functionalRBTree = require('functional-red-black-tree'),
+    SkipList = require('./skiplist').SkipList,
     bintrees = require('bintrees');
     // not benchmarking dsjslib & binarySearchTree, they're slow and so not interesting
 
+console.log(SkipList);
+
 var data = [],
-    N = 1000;
+    N = 1000,
+    SKIP_LIST_HEIGHT = 16;
 
 for (var i = 0; i < N; i++) {
     data[i] = Math.floor(Math.random() * N);
@@ -25,6 +29,12 @@ new Benchmark.Suite()
     var tree = llrb(compare);
     for (var i = 0; i < N; i++) {
         tree.insert(data[i]);
+    }
+})
+.add('skiplist', function () {
+    var tree = new SkipList(SKIP_LIST_HEIGHT);
+    for (var i = 0; i < N; i++) {
+        tree.Put(data[i]);
     }
 })
 .add('bbtree', function () {
@@ -67,6 +77,11 @@ for (var i = 0; i < N; i++) {
     lltree.insert(data[i]);
 }
 
+var skiplist = new SkipList(SKIP_LIST_HEIGHT);
+for (var i = 0; i < N; i++) {
+    skiplist.Put(data[i]);
+}
+
 var rbtree = functionalRBTree(compare);
 for (var i = 0; i < N; i++) {
     rbtree = rbtree.insert(data[i]);
@@ -91,6 +106,11 @@ new Benchmark.Suite()
 .add('bbtree', function () {
     for (var i = 0; i < N; i++) {
         btree.find(data[i]);
+    }
+})
+.add('skiplist', function () {
+    for (var i = 0; i < N; i++) {
+        skiplist.Get(data[i]);
     }
 })
 .add('bsarray', function () {
@@ -130,6 +150,15 @@ new Benchmark.Suite()
     }
     for (i = 0; i < N; i++) {
         lltree.remove(data[i]);
+    }
+})
+.add('skiplist', function () {
+    var arr = new SkipList(SKIP_LIST_HEIGHT);
+    for (var i = 0; i < N; i++) {
+        arr.Put(data[i]);
+    }
+    for (var i = 0; i < N; i++) {
+        arr.Remove(data[i]);
     }
 })
 .add('bsarray', function () {
